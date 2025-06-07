@@ -1,18 +1,23 @@
-FROM python:3.9.7-slim-buster
+FROM debian:bullseye-slim
 
-# Set working directory
-WORKDIR /app
-
-# Copy all files to container
-COPY . .
-
-# Install dependencies
+# Install Python and system dependencies
 RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
     gcc \
     libffi-dev \
     ffmpeg \
     aria2 \
-    && pip install --no-cache-dir -r requirements.txt
+    && apt-get clean
 
-# Start the bot
-CMD ["python", "main.py"]
+# Set working directory
+WORKDIR /app
+
+# Copy all files
+COPY . .
+
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Run the bot
+CMD ["python3", "main.py"]
