@@ -29,4 +29,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "main.py"]
 # Run the bot
-CMD ntpdate -u time.google.com && python main.py
+
