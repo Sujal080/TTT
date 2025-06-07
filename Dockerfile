@@ -1,29 +1,26 @@
-# Base image
-FROM python:3.10-slim
+FROM python:3.10-slim-bullseye
 
-# Working directory
-WORKDIR /app
-
-# Install system-level tools
+# System-level dependencies
 RUN apt-get update && apt-get install -y \
     ffmpeg \
-    mediainfo \
-    git \
-    curl \
     gcc \
     libffi-dev \
     libssl-dev \
+    aria2 \
+    python3-dev \
     build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install Python packages
-COPY requirements.txt .
+# Set working directory
+WORKDIR /app
+
+# Copy all project files
+COPY . .
+
+# Install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all bot code
-COPY . .
-
-# Run the bot
-CMD ["python3", "main.py"].py"]
+# Start the bot
+CMD ["python", "main.py"]
