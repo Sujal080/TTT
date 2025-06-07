@@ -1,30 +1,25 @@
 FROM python:3.9.7-slim-buster
 
-# Set working directory
+ENV DEBIAN_FRONTEND=noninteractive
+
 WORKDIR /app
 
-# Install system dependencies
+COPY . .
+
 RUN apt-get update && apt-get install -y \
-    python3-pip \
     gcc \
     libffi-dev \
     ffmpeg \
     aria2 \
-    chromium \
-    chromium-driver \
-    curl \
-    unzip \
-    && apt-get clean
+    ntpdate \
+    python3-magic \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables for Selenium
-ENV CHROMIUM_PATH=/usr/bin/chromium
+RUN ntpdate -u time.google.com
 
-# Copy bot files
-COPY . .
+RUN pip install --upgrade pip setuptools wheel
 
-# Install Python dependencies
-RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run the bot
-CMD ["python3", "main.py"]
+CMD ntpdate -u time.google.com && python main.py
