@@ -29,3 +29,4 @@ hyperframe
 httpcore
 pyee
 colorama
+pyromod
