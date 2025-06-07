@@ -1,30 +1,29 @@
-# Base image with Python
-FROM python:3.9-slim-bullseye
+# Base image
+FROM python:3.10-slim
 
-# Disable interactive prompts during package install
-ENV DEBIAN_FRONTEND=noninteractive
+# Working directory
+WORKDIR /app
 
-# Install system dependencies required for pip packages and tools like ffmpeg
+# Install system-level tools
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    gcc \
-    python3-dev \
-    libffi-dev \
     ffmpeg \
-    aria2 \
+    mediainfo \
     git \
+    curl \
+    gcc \
+    libffi-dev \
+    libssl-dev \
+    build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /app
+# Copy requirements and install Python packages
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files to container
+# Copy all bot code
 COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
-
 # Run the bot
-CMD ["python", "main.py"]ain.py"
+CMD ["python3", "main.py"].py"]
